@@ -1,4 +1,5 @@
 # Put title of your app here
+Count down for what?
 
 <!--- Replace <OWNER> with your Github Username and <REPOSITORY> with the name of your repository. -->
 <!--- You can find both of these in the url bar when you open your repository in github. -->
@@ -6,12 +7,10 @@
 
 
 ## :scroll: Description
-<!--- Describe your app in one or two sentences -->
-
+A simple app showcasing Jetpack Compose animations on a timer.
 
 ## :bulb: Motivation and Context
-<!--- Optionally point readers to interesting parts of your submission. -->
-<!--- What are you especially proud of? -->
+I didn't have a lot of time this week to really dig into this challenge. I did enjoy learning more about how animations work in jetpack compose.
 
 
 ## :camera_flash: Screenshots
