@@ -16,14 +16,24 @@
 package com.example.androiddevchallenge
 
 import android.os.Bundle
+import android.text.format.DateUtils
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.animation.*
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.animateValueAsState
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.androiddevchallenge.ui.theme.MyTheme
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,8 +49,58 @@ class MainActivity : AppCompatActivity() {
 // Start building your app here!
 @Composable
 fun MyApp() {
+    val startTime = 30 * 1000.toLong()
+    var timer by remember { mutableStateOf(startTime) }
+    val coroutineScope = rememberCoroutineScope()
+
     Surface(color = MaterialTheme.colors.background) {
-        Text(text = "Ready... Set... GO!")
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                text = "Count down to what?",
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 36.dp)
+            )
+            coroutineScope.launch {
+                if (timer > 0) {
+                    delay(1000)
+                    timer -= 1000
+                }
+            }
+            AnimatedClock(startTime, timer)
+        }
+    }
+}
+
+@OptIn(ExperimentalAnimationApi::class)
+@Composable
+fun AnimatedClock(startTime: Long, timeRemaining: Long) {
+    var progress by remember { mutableStateOf(1.0F) }
+    val animatedProgress = animateFloatAsState(
+        targetValue = progress,
+        animationSpec = ProgressIndicatorDefaults.ProgressAnimationSpec
+    ).value
+
+    progress = timeRemaining.toFloat() / startTime.toFloat()
+
+    val formatted = DateUtils.formatElapsedTime(timeRemaining / 1000)
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 200.dp), horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Crossfade(targetState = timeRemaining) {
+            Text(text = formatted, fontSize = 30.sp, modifier = Modifier.wrapContentWidth())
+        }
+        LinearProgressIndicator(
+            progress = animatedProgress,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 16.dp, top = 16.dp, end = 16.dp)
+        )
     }
 }
 
